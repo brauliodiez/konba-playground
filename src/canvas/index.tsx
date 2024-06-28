@@ -21,11 +21,12 @@ export const SvgLoader: React.FC = () => {
   };
 
   useEffect(() => {
-    addSvgWidget("/combobox.svg", 50, 50);
-    addSvgWidget("/input.svg", 400, 50);
-    addSvgWidget("/button.svg", 800, 50);
-    addSvgWidget("/browser.svg", 50, 300);
-    addSvgWidget("/mobile.svg", 600, 300);
+    addSvgWidget("/widgets/combobox.svg", 50, 50);
+    addSvgWidget("/widgets/input.svg", 400, 50);
+    addSvgWidget("/widgets/button.svg", 800, 50);
+    addSvgWidget("/containers/browser.svg", 50, 300);
+    addSvgWidget("/containers/mobile.svg", 600, 300);
+    addSvgWidget("/containers/tablet.svg", 900, 300);
   }, []);
 
   return (
