@@ -1,37 +1,48 @@
 // src/components/SvgLoader.tsx
-import React, { useEffect, useRef } from "react";
-import { Stage, Layer } from "react-konva";
+import React, { useEffect, useRef, useState } from "react";
+import { Stage, Layer, Image } from "react-konva";
 import Konva from "konva";
+import useImage from "use-image";
+import {
+  mockLayoutImageCollection,
+  mockWidgetImageCollection,
+} from "./mock-data";
+import { Coordinate } from "./canvas.model";
 
 export const SvgLoader: React.FC = () => {
-  const layerRef = useRef<Konva.Layer>(null);
+  const baseLayerRef = useRef<Konva.Layer>(null);
+  const widgetLayerRef = useRef<Konva.Layer>(null);
+  const [widgetImageCollection] = useState(mockWidgetImageCollection);
+  const [layoutImageCollection] = useState(mockLayoutImageCollection);
 
-  const addSvgWidget = (url: string, x: number, y: number) => {
-    Konva.Image.fromURL(url, (imageNode) => {
-      imageNode.setAttrs({
-        x,
-        y,
-        scaleX: 1,
-        scaleY: 1,
-      });
-
-      layerRef.current?.add(imageNode);
-      layerRef.current?.draw();
-    });
+  const convertImage = (imageUrl: string, coord: Coordinate) => {
+    const [img] = useImage(imageUrl);
+    return <Image image={img} x={coord.x} y={coord.y} draggable />;
   };
 
   useEffect(() => {
-    addSvgWidget("/widgets/combobox.svg", 50, 50);
-    addSvgWidget("/widgets/input.svg", 400, 50);
-    addSvgWidget("/widgets/button.svg", 800, 50);
-    addSvgWidget("/containers/browser.svg", 50, 300);
-    addSvgWidget("/containers/mobile.svg", 600, 300);
-    addSvgWidget("/containers/tablet.svg", 900, 300);
-  }, []);
+    // Ensure layers are re-drawn when references are updated
+    if (baseLayerRef.current) {
+      baseLayerRef.current.batchDraw();
+    }
+    if (widgetLayerRef.current) {
+      widgetLayerRef.current.batchDraw();
+    }
+  }, [layoutImageCollection, widgetImageCollection]);
 
   return (
     <Stage width={window.innerWidth} height={window.innerHeight}>
-      <Layer ref={layerRef} />
+      <Layer ref={baseLayerRef}>
+        {layoutImageCollection.map((widget) =>
+          convertImage(widget.imageUrl, widget.coord)
+        )}
+      </Layer>
+
+      <Layer ref={widgetLayerRef}>
+        {widgetImageCollection.map((widget) =>
+          convertImage(widget.imageUrl, widget.coord)
+        )}
+      </Layer>
     </Stage>
   );
 };
