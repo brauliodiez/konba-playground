@@ -8,21 +8,20 @@ import {
   mockWidgetImageCollection,
 } from "./mock-data";
 import { Coordinate } from "./canvas.model";
+import { ComboBoxShape } from "./components";
 
 export const SvgLoader: React.FC = () => {
   const baseLayerRef = useRef<Konva.Layer>(null);
   const widgetLayerRef = useRef<Konva.Layer>(null);
   const [widgetImageCollection] = useState(mockWidgetImageCollection);
   const [layoutImageCollection] = useState(mockLayoutImageCollection);
-  const [rectProps, setRectProps] = useState({
+  const [comboProps, setComboProps] = useState({
     x: 50,
-    y: 50,
-    width: 100,
-    height: 100,
-    fill: "blue",
-    draggable: true,
+    y: 150,
+    width: 150,
+    height: 50,
   });
-  const rectRef = useRef<any>();
+  const comboRef = useRef<any>();
   const trRef = useRef<any>();
 
   const convertImage = (imageUrl: string, coord: Coordinate) => {
@@ -31,13 +30,13 @@ export const SvgLoader: React.FC = () => {
   };
 
   const handleTransformEnd = () => {
-    const node = rectRef.current;
+    const node = comboRef.current;
     const scaleX = node.scaleX();
     const scaleY = node.scaleY();
 
     // Update the width and height and reset the scale
-    setRectProps({
-      ...rectProps,
+    setComboProps({
+      ...comboProps,
       width: node.width() * scaleX,
       height: node.height() * scaleY,
     });
@@ -48,8 +47,8 @@ export const SvgLoader: React.FC = () => {
   };
 
   useEffect(() => {
-    if (trRef.current && rectRef.current) {
-      trRef.current.nodes([rectRef.current]);
+    if (trRef.current && comboRef.current) {
+      trRef.current.nodes([comboRef.current]);
       trRef.current.getLayer().batchDraw();
     }
   }, []);
@@ -73,15 +72,24 @@ export const SvgLoader: React.FC = () => {
       </Layer>
 
       <Layer ref={widgetLayerRef}>
-        <Rect
-          ref={rectRef}
-          {...rectProps}
+        <ComboBoxShape
+          ref={comboRef}
+          {...comboProps}
+          draggable
           onTransformEnd={handleTransformEnd}
         />
         {widgetImageCollection.map((widget) =>
           convertImage(widget.imageUrl, widget.coord)
         )}
-        <Transformer ref={trRef} />
+        <Transformer
+          ref={trRef}
+          boundBoxFunc={(oldBox, newBox) => {
+            if (newBox.width < 50 || newBox.height < 50) {
+              return oldBox;
+            }
+            return newBox;
+          }}
+        />
       </Layer>
     </Stage>
   );
