@@ -13,7 +13,14 @@ interface ComboBoxShapeProps extends ShapeConfig {
 export const ComboBoxShape = forwardRef<any, ComboBoxShapeProps>(
   ({ x, y, width, height, ...shapeProps }, ref) => {
     return (
-      <Group x={x} y={y} ref={ref} {...shapeProps}>
+      <Group
+        x={x}
+        y={y}
+        ref={ref}
+        width={width}
+        height={height}
+        {...shapeProps}
+      >
         {/* Rectangle */}
         <Path
           data={`M1,1 H${width - 2} V${height - 2} H1 Z`}

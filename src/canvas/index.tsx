@@ -35,12 +35,14 @@ export const SvgLoader: React.FC = () => {
     const scaleY = node.scaleY();
 
     // Update the width and height and reset the scale
-    setComboProps({
+    setComboProps((comboProps) => ({
       ...comboProps,
-      width: node.width() * scaleX,
-      height: node.height() * scaleY,
-    });
+      width: comboProps.width * scaleX,
+      height: comboProps.height * scaleY,
+    }));
 
+    node.width(comboProps.width);
+    node.height(comboProps.height);
     // Reset the scale to avoid further scaling
     node.scaleX(1);
     node.scaleY(1);
