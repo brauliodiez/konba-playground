@@ -150,17 +150,6 @@ export const SvgLoader: React.FC = () => {
 
   // TODO: review fine tunning cursor and drop
   /*
-  import React, { useState, useRef, useEffect } from 'react';
-import { Stage, Layer } from 'react-konva';
-import { Droppable, monitorForElements } from '@atlaskit/pragmatic-drag-and-drop';
-import ComboBoxShape from './ComboBoxShape';
-
-const KonvaCanvas: React.FC = () => {
-  const [shapes, setShapes] = useState<Array<{ x: number; y: number }>>([]);
-  const stageRef = useRef<any>(null);
-  const canvasRef = useRef<HTMLDivElement>(null);
-
-  useEffect(() => {
     const handleZoom = (e: MouseEvent) => {
       const stage = stageRef.current;
       const scaleBy = 1.1;
@@ -184,79 +173,6 @@ const KonvaCanvas: React.FC = () => {
       stage.position(newPos);
       stage.batchDraw();
     };
-
-    document.getElementById('zoom-in')?.addEventListener('click', handleZoom);
-    document.getElementById('zoom-out')?.addEventListener('click', handleZoom);
-
-    return () => {
-      document.getElementById('zoom-in')?.removeEventListener('click', handleZoom);
-      document.getElementById('zoom-out')?.removeEventListener('click', handleZoom);
-    };
-  }, []);
-
-  useEffect(() => {
-    return monitorForElements({
-      onDrop({ source, location }) {
-        const destination = location.current.dropTargets[0];
-        if (!destination || destination.descriptor.id !== 'canvas') {
-          // Si se suelta fuera del canvas
-          return;
-        }
-
-        const type = source.data.type;
-        if (type === 'combobox' && stageRef.current && canvasRef.current) {
-          const { clientX, clientY } = location.initial;
-          const canvasRect = canvasRef.current.getBoundingClientRect();
-          const x = clientX - canvasRect.left;
-          const y = clientY - canvasRect.top;
-
-          const stage = stageRef.current;
-          stage.setPointersPositions({ clientX, clientY });
-
-          const pointerPosition = stage.getPointerPosition();
-          if (pointerPosition) {
-            const { x, y } = pointerPosition;
-            setShapes((shapes) => [...shapes, { x, y }]);
-          }
-        }
-      },
-    });
-  }, []);
-
-  return (
-    <Droppable droppableId="canvas">
-      {(provided) => (
-        <div
-          ref={(node) => {
-            provided.innerRef(node);
-            canvasRef.current = node;
-          }}
-          {...provided.droppableProps}
-          style={{ flex: 1, position: 'relative', background: 'white' }}
-        >
-          <Stage width={window.innerWidth} height={window.innerHeight} ref={stageRef}>
-            <Layer>
-              {shapes.map((shape, index) => (
-                <ComboBoxShape
-                  key={index}
-                  x={shape.x}
-                  y={shape.y}
-                  width={200}
-                  height={50}
-                  draggable
-                />
-              ))}
-            </Layer>
-          </Stage>
-          {provided.placeholder}
-        </div>
-      )}
-    </Droppable>
-  );
-};
-
-export default KonvaCanvas;
-
   */
   const onZoom = (
     e: React.MouseEvent<HTMLButtonElement, MouseEvent>,
