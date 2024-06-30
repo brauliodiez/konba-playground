@@ -148,44 +148,173 @@ export const SvgLoader: React.FC = () => {
 
   // </Pragmatic drag and drop>
 
-  return (
-    <div
-      ref={dropRef}
-      style={{ background: isDraggedOver ? "azure" : "white" }}
-    >
-      <Stage
-        width={window.innerWidth}
-        height={window.innerHeight}
-        ref={stageRef}
-      >
-        <Layer ref={baseLayerRef}>
-          {layoutImageCollection.map((widget) =>
-            convertImage(widget.imageUrl, widget.coord)
-          )}
-        </Layer>
+  // TODO: review fine tunning cursor and drop
+  /*
+  import React, { useState, useRef, useEffect } from 'react';
+import { Stage, Layer } from 'react-konva';
+import { Droppable, monitorForElements } from '@atlaskit/pragmatic-drag-and-drop';
+import ComboBoxShape from './ComboBoxShape';
 
-        <Layer ref={widgetLayerRef}>
-          <ComboBoxShape
-            ref={comboRef}
-            {...comboProps}
-            draggable
-            onTransform={handleTransformEnd}
-            onTransformEnd={handleTransformEnd}
-          />
-          {widgetImageCollection.map((widget) =>
-            convertImage(widget.imageUrl, widget.coord)
-          )}
-          <Transformer
-            ref={trRef}
-            boundBoxFunc={(oldBox, newBox) => {
-              if (newBox.width < 230 || newBox.height > 51) {
-                return oldBox;
-              }
-              return newBox;
-            }}
-          />
-        </Layer>
-      </Stage>
+const KonvaCanvas: React.FC = () => {
+  const [shapes, setShapes] = useState<Array<{ x: number; y: number }>>([]);
+  const stageRef = useRef<any>(null);
+  const canvasRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    const handleZoom = (e: MouseEvent) => {
+      const stage = stageRef.current;
+      const scaleBy = 1.1;
+      const oldScale = stage.scaleX();
+      const pointer = stage.getPointerPosition();
+
+      if (!pointer) return;
+
+      const mousePointTo = {
+        x: pointer.x / oldScale - stage.x() / oldScale,
+        y: pointer.y / oldScale - stage.y() / oldScale,
+      };
+
+      const newScale = e.currentTarget.id === 'zoom-in' ? oldScale * scaleBy : oldScale / scaleBy;
+      stage.scale({ x: newScale, y: newScale });
+
+      const newPos = {
+        x: -(mousePointTo.x - pointer.x / newScale) * newScale,
+        y: -(mousePointTo.y - pointer.y / newScale) * newScale,
+      };
+      stage.position(newPos);
+      stage.batchDraw();
+    };
+
+    document.getElementById('zoom-in')?.addEventListener('click', handleZoom);
+    document.getElementById('zoom-out')?.addEventListener('click', handleZoom);
+
+    return () => {
+      document.getElementById('zoom-in')?.removeEventListener('click', handleZoom);
+      document.getElementById('zoom-out')?.removeEventListener('click', handleZoom);
+    };
+  }, []);
+
+  useEffect(() => {
+    return monitorForElements({
+      onDrop({ source, location }) {
+        const destination = location.current.dropTargets[0];
+        if (!destination || destination.descriptor.id !== 'canvas') {
+          // Si se suelta fuera del canvas
+          return;
+        }
+
+        const type = source.data.type;
+        if (type === 'combobox' && stageRef.current && canvasRef.current) {
+          const { clientX, clientY } = location.initial;
+          const canvasRect = canvasRef.current.getBoundingClientRect();
+          const x = clientX - canvasRect.left;
+          const y = clientY - canvasRect.top;
+
+          const stage = stageRef.current;
+          stage.setPointersPositions({ clientX, clientY });
+
+          const pointerPosition = stage.getPointerPosition();
+          if (pointerPosition) {
+            const { x, y } = pointerPosition;
+            setShapes((shapes) => [...shapes, { x, y }]);
+          }
+        }
+      },
+    });
+  }, []);
+
+  return (
+    <Droppable droppableId="canvas">
+      {(provided) => (
+        <div
+          ref={(node) => {
+            provided.innerRef(node);
+            canvasRef.current = node;
+          }}
+          {...provided.droppableProps}
+          style={{ flex: 1, position: 'relative', background: 'white' }}
+        >
+          <Stage width={window.innerWidth} height={window.innerHeight} ref={stageRef}>
+            <Layer>
+              {shapes.map((shape, index) => (
+                <ComboBoxShape
+                  key={index}
+                  x={shape.x}
+                  y={shape.y}
+                  width={200}
+                  height={50}
+                  draggable
+                />
+              ))}
+            </Layer>
+          </Stage>
+          {provided.placeholder}
+        </div>
+      )}
+    </Droppable>
+  );
+};
+
+export default KonvaCanvas;
+
+  */
+  const onZoom = (
+    e: React.MouseEvent<HTMLButtonElement, MouseEvent>,
+    zoomIn: boolean
+  ) => {
+    const stage = stageRef.current;
+    invariant(stage);
+    const scaleBy = zoomIn ? 1.1 : 0.9;
+    const oldScale = stage.scaleX();
+    //const pointer = stage.getPointerPosition();
+
+    const newScale = oldScale * scaleBy;
+    stage.scale({ x: newScale, y: newScale });
+    stage.batchDraw();
+  };
+
+  return (
+    <div style={{ container: "flex" }}>
+      <button onClick={(e) => onZoom(e, true)}>Zoom in</button>
+      <button onClick={(e) => onZoom(e, false)}>Zoom out</button>
+      <div
+        ref={dropRef}
+        style={{ background: isDraggedOver ? "azure" : "white" }}
+      >
+        <Stage
+          width={window.innerWidth}
+          height={window.innerHeight}
+          ref={stageRef}
+        >
+          <Layer ref={baseLayerRef}>
+            {layoutImageCollection.map((widget) =>
+              convertImage(widget.imageUrl, widget.coord)
+            )}
+          </Layer>
+
+          <Layer ref={widgetLayerRef}>
+            <ComboBoxShape
+              ref={comboRef}
+              {...comboProps}
+              draggable
+              onTransform={handleTransformEnd}
+              onTransformEnd={handleTransformEnd}
+            />
+            {widgetImageCollection.map((widget) =>
+              convertImage(widget.imageUrl, widget.coord)
+            )}
+            <Transformer
+              ref={trRef}
+              boundBoxFunc={(oldBox, newBox) => {
+                if (newBox.width < 230 || newBox.height > 51) {
+                  return oldBox;
+                }
+                return newBox;
+              }}
+            />
+          </Layer>
+        </Stage>
+      </div>
     </div>
   );
 };
