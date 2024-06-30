@@ -189,6 +189,37 @@ export const SvgLoader: React.FC = () => {
     stage.batchDraw();
   };
 
+  /* scroll*/
+  useEffect(() => {
+    const handleScroll = (e: WheelEvent) => {
+      e.preventDefault();
+      const stage = stageRef.current;
+      invariant(stage);
+      const scale = stage.scaleX();
+      const dx = e.deltaX / scale;
+      const dy = e.deltaY / scale;
+
+      stage.position({
+        x: stage.x() - dx,
+        y: stage.y() - dy,
+      });
+
+      stage.batchDraw();
+    };
+
+    // dropRef is canvas ref, later on add another div for more clariy
+    let container = null;
+    if (dropRef.current) {
+      container = dropRef.current as HTMLDivElement;
+    }
+    invariant(container);
+    container?.addEventListener("wheel", handleScroll);
+
+    return () => {
+      container?.removeEventListener("wheel", handleScroll);
+    };
+  }, []);
+
   return (
     <div style={{ container: "flex" }}>
       <button onClick={(e) => onZoom(e, true)}>Zoom in</button>
