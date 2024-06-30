@@ -78,6 +78,7 @@ export const SvgLoader: React.FC = () => {
           ref={comboRef}
           {...comboProps}
           draggable
+          onTransform={handleTransformEnd}
           onTransformEnd={handleTransformEnd}
         />
         {widgetImageCollection.map((widget) =>
@@ -86,7 +87,7 @@ export const SvgLoader: React.FC = () => {
         <Transformer
           ref={trRef}
           boundBoxFunc={(oldBox, newBox) => {
-            if (newBox.width < 50 || newBox.height > 51) {
+            if (newBox.width < 230 || newBox.height > 51) {
               return oldBox;
             }
             return newBox;
