@@ -18,7 +18,7 @@ export const SvgLoader: React.FC = () => {
   const [comboProps, setComboProps] = useState({
     x: 50,
     y: 150,
-    width: 150,
+    width: 230,
     height: 50,
   });
   const comboRef = useRef<any>();
@@ -86,7 +86,7 @@ export const SvgLoader: React.FC = () => {
         <Transformer
           ref={trRef}
           boundBoxFunc={(oldBox, newBox) => {
-            if (newBox.width < 50 || newBox.height < 50) {
+            if (newBox.width < 50 || newBox.height > 51) {
               return oldBox;
             }
             return newBox;
