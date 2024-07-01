@@ -253,7 +253,10 @@ export const SvgLoader: React.FC = () => {
             <Transformer
               ref={trRef}
               boundBoxFunc={(oldBox, newBox) => {
-                if (newBox.width < 230 || newBox.height > 51) {
+                if (newBox.height > 51) {
+                  newBox.height = 51;
+                }
+                if (newBox.width < 230) {
                   return oldBox;
                 }
                 return newBox;
