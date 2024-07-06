@@ -250,6 +250,7 @@ export const SvgLoader: React.FC = () => {
             {widgetImageCollection.map((widget) =>
               convertImage(widget.imageUrl, widget.coord)
             )}
+            
             <Transformer
               ref={trRef}
               boundBoxFunc={(oldBox, newBox) => {

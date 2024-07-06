@@ -1,7 +1,6 @@
 import { ShapeConfig } from "konva/lib/Shape";
 import { forwardRef } from "react";
 import { Path, Group, Text } from "react-konva";
-//import { Path, Text, Group } from "react-konva";
 
 interface ComboBoxShapeProps extends ShapeConfig {
   x: number;
