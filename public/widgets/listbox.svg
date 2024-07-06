@@ -1,0 +1,19 @@
+<svg width="200" height="150" xmlns="http://www.w3.org/2000/svg">
+  <!-- Rectángulo del listbox -->
+  <rect x="10" y="10" width="180" height="130" rx="10" ry="10" 
+        style="fill:none;stroke:black;stroke-width:2"/>
+  
+  <!-- Elementos de la lista -->
+  <text x="20" y="40" font-family="Comic Sans MS, cursive" font-size="20" fill="black">
+    Item 1
+  </text>
+  <text x="20" y="70" font-family="Comic Sans MS, cursive" font-size="20" fill="black">
+    Item 2
+  </text>
+  <text x="20" y="100" font-family="Comic Sans MS, cursive" font-size="20" fill="black">
+    Item 3
+  </text>
+  <text x="20" y="130" font-family="Comic Sans MS, cursive" font-size="20" fill="black">
+    Item 4
+  </text>
+</svg>
