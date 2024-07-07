@@ -1,15 +1,15 @@
-<svg width="300" height="400" xmlns="http://www.w3.org/2000/svg">
+<svg width="400" height="300" xmlns="http://www.w3.org/2000/svg">
   <!-- Marco de la tablet -->
-  <rect x="20" y="20" width="260" height="360" rx="20" ry="20"
+  <rect x="20" y="20" width="360" height="260" rx="20" ry="20"
         style="fill:none;stroke:black;stroke-width:2"/>
 
   <!-- Pantalla de la tablet -->
-  <rect x="30" y="40" width="240" height="320" rx="10" ry="10"
+  <rect x="40" y="30" width="320" height="240" rx="10" ry="10"
         style="fill:none;stroke:black;stroke-width:1"/>
 
   <!-- Cámara frontal -->
-  <circle cx="150" cy="30" r="5" style="fill:none;stroke:black;stroke-width:1"/>
+  <circle cx="30" cy="150" r="5" style="fill:none;stroke:black;stroke-width:1"/>
 
   <!-- Botón de inicio -->
-  <circle cx="150" cy="370" r="10" style="fill:none;stroke:black;stroke-width:2"/>
+  <circle cx="370" cy="150" r="7" style="fill:none;stroke:black;stroke-width:2"/>
 </svg>
